@@ -1,0 +1,82 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input 
+      class="search-input" 
+      placeholder="请输入文献标题、主题或关键词"
+      bindinput="onInput"
+      value="{{searchQuery}}"
+    />
+    <view class="search-btn" bindtap="search">搜索</view>
+  </view>
+  
+  <!-- 检索类型选择器 -->
+  <view class="type-selector">
+    <view 
+      class="type-item {{activeType === 'all' ? 'active' : ''}}"
+      bindtap="selectType"
+      data-type="all"
+    >
+      全部
+    </view>
+    <view 
+      class="type-item {{activeType === 'title' ? 'active' : ''}}"
+      bindtap="selectType"
+      data-type="title"
+    >
+      标题
+    </view>
+    <view 
+      class="type-item {{activeType === 'subject' ? 'active' : ''}}"
+      bindtap="selectType"
+      data-type="subject"
+    >
+      主题
+    </view>
+    <view 
+      class="type-item {{activeType === 'keyword' ? 'active' : ''}}"
+      bindtap="selectType"
+      data-type="keyword"
+    >
+      关键词
+    </view>
+    <view 
+      class="type-item {{activeType === 'author' ? 'active' : ''}}"
+      bindtap="selectType"
+      data-type="author"
+    >
+      作者
+    </view>
+  </view>
+  
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <loading>加载中...</loading>
+  </view>
+  
+  <!-- 错误提示 -->
+  <view wx:if="{{error}}" class="error">
+    {{error}}
+  </view>
+  
+  <!-- 空状态 -->
+  <view wx:elif="{{!loading && papers.length === 0 && searchQuery}}" class="empty">
+    未找到相关文献，请尝试其他检索词
+  </view>
+  
+  <!-- 检索结果列表 -->
+  <view wx:else class="papers-list">
+    <view 
+      class="paper-item" 
+      wx:for="{{papers}}" 
+      wx:key="_id"
+      bindtap="goToDetail"
+      data-id="{{item._id}}"
+    >
+      <view class="paper-title">{{item.title}}</view>
+      <view class="paper-authors">{{item.authors.join(', ')}}</view>
+      <view class="paper-journal">{{item.journal}}</view>
+      <view class="paper-date">{{formatDate(item.publicationDate)}}</view>
+    </view>
+  </view>
+</view>
